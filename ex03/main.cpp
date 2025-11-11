@@ -10,29 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Bureaucrat.hpp"
-#include "AForm.hpp"
-#include "PresidentialPardonForm.hpp"
-#include "RobotomyRequestForm.hpp"
-#include "ShrubberyCreationForm.hpp"
-#include <cstdlib>
-#include <ctime>
+#include "Intern.hpp"
+
 
 int main()
 {
 	std::srand(std::time(NULL));
 	
-	std::cout << "=== TEST 1: ShrubberyCreationForm ===" << std::endl;
+	std::cout << "=== TEST 1: Intern creates Shrubbery form ===" << std::endl;
 	try
 	{
+		Intern intern;
 		Bureaucrat john("John", 137);
-		ShrubberyCreationForm shrubbery("home");
+		AForm *form;
 		
-		std::cout << john << std::endl;
-		std::cout << shrubbery << std::endl;
-		
-		john.signForm(shrubbery);
-		john.executeForm(shrubbery);
+		form = intern.makeForm("shrubbery creation", "home");
+		if (form)
+		{
+			std::cout << *form << std::endl;
+			john.signForm(*form);
+			john.executeForm(*form);
+			delete form;
+		}
 	}
 	catch (std::exception &e)
 	{
@@ -40,22 +39,21 @@ int main()
 	}
 	std::cout << std::endl;
 
-	std::cout << "=== TEST 2: RobotomyRequestForm - Multiple attempts ===" << std::endl;
+	std::cout << "=== TEST 2: Intern creates Robotomy form ===" << std::endl;
 	try
 	{
+		Intern intern;
 		Bureaucrat engineer("Engineer", 40);
-		RobotomyRequestForm robotomy("Bender");
+		AForm *form;
 		
-		std::cout << engineer << std::endl;
-		std::cout << robotomy << std::endl;
-		
-		engineer.signForm(robotomy);
-		std::cout << "\nAttempt 1:" << std::endl;
-		engineer.executeForm(robotomy);
-		std::cout << "Attempt 2:" << std::endl;
-		engineer.executeForm(robotomy);
-		std::cout << "Attempt 3:" << std::endl;
-		engineer.executeForm(robotomy);
+		form = intern.makeForm("robotomy request", "Bender");
+		if (form)
+		{
+			std::cout << *form << std::endl;
+			engineer.signForm(*form);
+			engineer.executeForm(*form);
+			delete form;
+		}
 	}
 	catch (std::exception &e)
 	{
@@ -63,17 +61,21 @@ int main()
 	}
 	std::cout << std::endl;
 
-	std::cout << "=== TEST 3: PresidentialPardonForm ===" << std::endl;
+	std::cout << "=== TEST 3: Intern creates Presidential form ===" << std::endl;
 	try
 	{
+		Intern intern;
 		Bureaucrat president("President", 1);
-		PresidentialPardonForm pardon("Arthur Dent");
+		AForm *form;
 		
-		std::cout << president << std::endl;
-		std::cout << pardon << std::endl;
-		
-		president.signForm(pardon);
-		president.executeForm(pardon);
+		form = intern.makeForm("presidential pardon", "Arthur Dent");
+		if (form)
+		{
+			std::cout << *form << std::endl;
+			president.signForm(*form);
+			president.executeForm(*form);
+			delete form;
+		}
 	}
 	catch (std::exception &e)
 	{
@@ -81,49 +83,52 @@ int main()
 	}
 	std::cout << std::endl;
 
-	std::cout << "=== TEST 4: Try to execute unsigned form ===" << std::endl;
+	std::cout << "=== TEST 4: Intern tries to create unknown form ===" << std::endl;
 	try
 	{
+		Intern intern;
+		AForm *form;
+		
+		form = intern.makeForm("vacation request", "Bahamas");
+		if (form)
+		{
+			std::cout << *form << std::endl;
+			delete form;
+		}
+	}
+	catch (std::exception &e)
+	{
+		std::cout << "Exception: " << e.what() << std::endl;
+	}
+	std::cout << std::endl;
+
+	std::cout << "=== TEST 5: Multiple forms from same intern ===" << std::endl;
+	try
+	{
+		Intern intern;
 		Bureaucrat boss("Boss", 1);
-		ShrubberyCreationForm shrubbery("garden");
+		AForm *form1 = intern.makeForm("shrubbery creation", "office");
+		AForm *form2 = intern.makeForm("robotomy request", "Employee");
+		AForm *form3 = intern.makeForm("presidential pardon", "Zaphod");
 		
-		std::cout << "Trying to execute unsigned form..." << std::endl;
-		boss.executeForm(shrubbery);
-	}
-	catch (std::exception &e)
-	{
-		std::cout << "Exception: " << e.what() << std::endl;
-	}
-	std::cout << std::endl;
-
-	std::cout << "=== TEST 5: Grade too low to sign ===" << std::endl;
-	try
-	{
-		Bureaucrat intern("Intern", 100);
-		PresidentialPardonForm pardon("Ford Prefect");
-		
-		std::cout << intern << std::endl;
-		std::cout << pardon << std::endl;
-		
-		intern.signForm(pardon);
-	}
-	catch (std::exception &e)
-	{
-		std::cout << "Exception: " << e.what() << std::endl;
-	}
-	std::cout << std::endl;
-
-	std::cout << "=== TEST 6: Grade too low to execute ===" << std::endl;
-	try
-	{
-		Bureaucrat manager("Manager", 10);
-		Bureaucrat president("President", 1);
-		PresidentialPardonForm pardon("Zaphod");
-		
-		president.signForm(pardon);
-		
-		std::cout << "\nManager tries to execute..." << std::endl;
-		manager.executeForm(pardon);
+		if (form1)
+		{
+			boss.signForm(*form1);
+			boss.executeForm(*form1);
+			delete form1;
+		}
+		if (form2)
+		{
+			boss.signForm(*form2);
+			boss.executeForm(*form2);
+			delete form2;
+		}
+		if (form3)
+		{
+			boss.signForm(*form3);
+			boss.executeForm(*form3);
+			delete form3;
+		}
 	}
 	catch (std::exception &e)
 	{
