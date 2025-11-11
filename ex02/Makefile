@@ -2,11 +2,13 @@ CXX         = c++
 CXXFLAGS    = -Wall -Wextra -Werror -std=c++98
 RM          = rm -f
 
-NAME        = Form
+NAME        = AForm
 
-INCLUDES    = Bureaucrat.hpp Form.hpp
+INCLUDES = Bureaucrat.hpp AForm.hpp PresidentialPardonForm.hpp \
+       RobotomyRequestForm.hpp ShrubberyCreationForm.hpp
 
-SRCS        = Bureaucrat.cpp Form.cpp main.cpp
+SRCS = main.cpp Bureaucrat.cpp AForm.cpp PresidentialPardonForm.cpp \
+       RobotomyRequestForm.cpp ShrubberyCreationForm.cpp
 
 OBJS        = $(SRCS:.cpp=.o)
 

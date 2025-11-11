@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Form.hpp                                           :+:      :+:    :+:   */
+/*   AForm.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,27 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FORM_HPP
-#define FORM_HPP
+#ifndef AFORM_HPP
+#define AFORM_HPP
 
 #include <iostream>
 #include "Bureaucrat.hpp"
 
 class Bureaucrat;
 
-class Form
+class AForm
 {
 	public:
-			Form();
-			Form(std::string name, int toSign, int toExecute);
-			~Form();
-			Form(const Form &copy);
-			Form& operator=(const Form &other);
+			AForm();
+			AForm(std::string name, int toSign, int toExecute);
+			virtual ~AForm();
+			AForm(const AForm &copy);
+			AForm& operator=(const AForm &other);
 			const std::string &getFormName() const;
 			int getMinValueToExec() const;
 			int getMinValueToSign() const;
 			bool getSignature() const;
 			void beSigned(const Bureaucrat &b);
+			void execute(const Bureaucrat &executor) const;
 			class GradeTooHighException : public std::exception
 			{
 				virtual const char *what() const throw();
@@ -43,14 +44,21 @@ class Form
 			{
 				virtual const char *what() const throw();
 			};
+			class NotSignedException : public std::exception
+			{
+				virtual const char *what() const throw();
+			};			
 
 	private:
 			const std::string 	_name;
 			bool			_signed;
 			const int		_toSign;
 			const int		_toExecute;
+			
+	protected:
+			virtual void 	executeAction() const = 0;		
 };
 
-std::ostream &operator<<(std::ostream &out, const Form &f);
+std::ostream &operator<<(std::ostream &out, const AForm &f);
 
 #endif
